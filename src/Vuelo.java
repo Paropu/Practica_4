@@ -3,7 +3,7 @@ import java.util.Calendar;
 //import java.util.Collections;
 import java.util.GregorianCalendar;
 
-public class Vuelo implements Comparable {
+public class Vuelo implements Comparable <Vuelo> {
 
 	private String identificador; // Atributos.
 	private String companhia;
@@ -68,21 +68,16 @@ public class Vuelo implements Comparable {
 
 	@Override
 	public String toString() { // Metodo toString() modificado para mostrar las propiedades del vuelo.
-		String mensaje = "     | " + identificador + " |    | " + companhia + " |   | " + coste + " |   | " 
-	+ horaSalida + " |   | " + horaLlegada + " |   | " + duracion + " |";
-		return mensaje; //OPTIMIZAR INTERFAZ GRAFICA gotoxy();
+		String mensaje = "\t| " + identificador + " |\t| " + companhia + " |\t\t| " + coste + " |  \t| " + horaSalida + " |\t | "
+				+ horaLlegada + " |\t  | " + duracion + " |";
+		return mensaje;
 	}
 
-	@Override
-	public int compareTo(Object o) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+
 	
-	/*@Override
-	public int compareTo(Object o) { //Metodo compareTo() modificado para definir el orden natural de los objetos en la lista.
-		Vuelo vuelo = (Vuelo) o;
-		return this.horaSalida.replace(":", "").compareTo(vuelo.horaSalida.replace(":", ""));
-	}*/
+	@Override
+	public int compareTo(Vuelo vueloComparado) { //Metodo compareTo() modificado para definir el orden natural de los objetos en la lista.
+		return this.horaSalida.replace(":", "").compareTo(vueloComparado.horaSalida.replace(":", ""));
+	}
 	
 }
