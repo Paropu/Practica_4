@@ -31,10 +31,10 @@ public class GestorVuelos {
 		}
 	}
 
-	public class ComparatorCompanhia implements Comparator<Vuelo> {//Orden Companhia alfabetico???
+	public class ComparatorCompanhia implements Comparator<String> {//Orden Companhia alfabetico???
 		@Override
-		public int compare(Vuelo o1, Vuelo o2) {
-			return o2.getCompanhia().compareTo(o1.getCompanhia());
+		public int compare(String o1, String o2) {
+			return o2.compareTo(o1);
 		}
 
 
@@ -51,7 +51,24 @@ public class GestorVuelos {
 			}
 			Scanner entrada = new Scanner(flujo_entrada);// Se crea un objeto para escanear la linea del fichero
 			String linea = null; // Variable que contendra la informacion escaneada del fichero
+			
 			TreeMap<Integer, Vuelo> treeMapVuelos = new TreeMap<Integer, Vuelo>();
+			TreeMap<Integer, Vuelo> treeMapVuelosHoraSalida = new TreeMap<Integer, Vuelo>();	
+			
+			TreeMap<String, Vuelo> treeMapVuelosCompanhia = new TreeMap <String, Vuelo> (new Comparator <String> (){
+				@Override
+				public int compare(String o1, String o2) {
+					String o11[] = o1.split(" ");
+					String o21[] = o2.split(" ");
+					if ((o21[0].compareTo(o11[0]))==0){
+						return o11[1].compareTo(o21[1]);
+					}
+					return o21[0].compareTo(o11[0]);
+				}
+			});
+			
+			TreeMap<String, Vuelo> treeMapVuelosBuscarCompanhia = new TreeMap<String, Vuelo>();	
+
 			while (entrada.hasNextLine()) { // Mientras hay lineas por leer...
 				linea = entrada.nextLine(); // Escaneamos la linea.
 				StringTokenizer separador = new StringTokenizer(linea, "*");
@@ -66,6 +83,9 @@ public class GestorVuelos {
 					// parametros escaneados anteriormente.
 					Vuelo vueloActual = new Vuelo(identificador, companhia, coste, horaSalida, horaLlegada, duracion);
 					treeMapVuelos.put(Integer.parseInt(vueloActual.getIdentificador()), vueloActual); //Añadimos el objeto creado a la lista enlazada.
+					treeMapVuelosHoraSalida.put(Integer.parseInt(vueloActual.getHoraSalida().replace(":", "")), vueloActual); //Añadimos el objeto creado a la lista enlazada.
+					treeMapVuelosCompanhia.put(vueloActual.getCompanhia() + " " + vueloActual.getIdentificador(), vueloActual); //Añadimos el objeto creado a la lista enlazada.
+					treeMapVuelosBuscarCompanhia.put(vueloActual.getCompanhia() + " " + vueloActual.getIdentificador(), vueloActual); //Añadimos el objeto creado a la lista enlazada.
 				} //Fin del bucle de creacion de la lista dinamica que contiene la informacion de los vuelos extraida del txt
 			}
 entrada.close();
@@ -94,9 +114,20 @@ entrada.close();
 					String duracion1 = Vuelo.duracionVuelo(horaSalida1, horaLlegada1);
 					Vuelo vueloActual = new Vuelo(identificador1, companhia1, coste1, horaSalida1, horaLlegada1, duracion1);
 					treeMapVuelos.put(Integer.parseInt(vueloActual.getIdentificador()), vueloActual); //Añadimos el objeto creado a la lista enlazada.
+					treeMapVuelosHoraSalida.put(Integer.parseInt(vueloActual.getHoraSalida().replace(":", "")), vueloActual); //Añadimos el objeto creado a la lista enlazada.
+					treeMapVuelosCompanhia.put(vueloActual.getCompanhia() + " " + vueloActual.getIdentificador(), vueloActual); //Añadimos el objeto creado a la lista enlazada.
+					treeMapVuelosBuscarCompanhia.put(vueloActual.getCompanhia() + " " + vueloActual.getIdentificador(), vueloActual); //Añadimos el objeto creado a la lista enlazada.
+					//treeMapVuelosHoraSalida.put(vueloActual.getHoraSalida().replace(":", ""), vueloActual); //Añadimos el objeto creado a la lista enlazada.
 					break;
+					
 
-				case 2:  //ORDENAR Y MOSTRAR POR PANTALLA VUELOS POR FECHA DE SALIDA (P3)
+				case 2:  //ORDENAR Y MOSTRAR POR PANTALLA VUELOS POR HORA DE SALIDA (P3)
+					System.out.println("\n     |Identificador|\t| Companhia |\t\t| Precio |\t| Salida |\t| Llegada |\t| Duracion |\n");
+					Iterator it = treeMapVuelosHoraSalida.keySet().iterator();
+					while(it.hasNext()){
+						Integer key = (Integer) it.next();
+						System.out.println(treeMapVuelosHoraSalida.get(key)); //treeMapVuelos.get(key). ejecuta el metodo toString definido en la clase del objeto.
+					}
 					//ComparatorHoraSalida2 comparador2 = new ComparatorHoraSalida2();
 				//Collections.sort(treeMapVuelos);	
 					//TreeMap <Integer, Vuelo> treeMapVuelosFechaSalida = new TreeMap<Integer, Vuelo> (new ComparatorHoraSalida2());
@@ -108,7 +139,12 @@ entrada.close();
 				case 3: //ORDENAR Y MOSTRAR POR PANTALLA VUELOS ORDENADOS ALFABETICAMENTE INVERSO Y SI COINCIDE, POR NUMERO DE VUELO DE MENOR A MAYOR
 					//Comparator <Vuelo> comparador= new ComparatorCompanhia();
 					//Collections.sort( treeMapVuelos,  comparador);
-
+					System.out.println("\n     |Identificador|\t| Companhia |\t\t| Precio |\t| Salida |\t| Llegada |\t| Duracion |\n");
+					Iterator iti = treeMapVuelosCompanhia.keySet().iterator();
+					while(iti.hasNext()){
+						String key = (String) iti.next();
+						System.out.println(treeMapVuelosCompanhia.get(key)); //treeMapVuelos.get(key). ejecuta el metodo toString definido en la clase del objeto.
+					}
 					break;
 
 				case 4:  //MOSTRAR POR PANTALLA INFORMACION DEL VUELO INTRODUCIDO POR IDENTIFICADOR
@@ -117,16 +153,23 @@ entrada.close();
 					int identificadorBuscado = teclado.nextInt();
 					teclado.nextLine(); //Se limpia el buffer.
 					if(treeMapVuelos.containsKey(identificadorBuscado)) {
-						System.out.println("\n" + treeMapVuelos.get(identificadorBuscado) + "\n\n");//treeMapVuelos.get(key2);
+						System.out.println("\n     |Identificador|\t| Companhia |\t\t| Precio |\t| Salida |\t| Llegada |\t| Duracion |");
+						System.out.println("\n" + treeMapVuelos.get(identificadorBuscado) + "\n\n");// treeMapVuelos.get(key2).metodo del objeto !!!;
 						//System.out.println("Hay ese objeto");
 					}
 					else System.out.println("\tERROR: No existe ningun vuelo con ese identificador\n");
 					break;
 				
 				case 5:  //MOSTRAR POR PANTALLA INFORMACION DE VUELOS POR COMPANHIA
-					System.out.println("\n\tIntroduzca una companhia de vuelo: ");
+					System.out.print("\n\tIntroduzca una companhia de vuelo: ");
 					String companhiaBuscada = teclado.next();
 					teclado.nextLine(); //Se limpia el buffer.
+					
+					if(treeMapVuelosBuscarCompanhia.containsKey(companhiaBuscada)) {
+						System.out.println("\n     |Identificador|\t| Companhia |\t\t| Precio |\t| Salida |\t| Llegada |\t| Duracion |");
+						System.out.println("\n" + treeMapVuelosBuscarCompanhia.get(companhiaBuscada) + "\n\n");// treeMapVuelos.get(key2).metodo del objeto !!!;
+						//System.out.println("Hay ese objeto");
+					}
 					//if(treeMapVuelos..containsValue(companhiaBuscada)) System.out.println("----");
 					//else System.out.println("+++++");
 					break;
@@ -135,12 +178,12 @@ entrada.close();
 					System.out.println("*** Fin del programa ***");
 					break;
 				case 0: //HERRAMIENTA
-					System.out.println("\n     |Identificador|\t| Companhia |\t\t| Precio |\t| Salida |\t| Llegada |\t| Duracion |\n");
-					Iterator it = treeMapVuelos.keySet().iterator();
+					/*System.out.println("\n     |Identificador|\t| Companhia |\t\t| Precio |\t| Salida |\t| Llegada |\t| Duracion |\n");
+					Iterator it = treeMapVuelosHoraSalida.keySet().iterator();
 					while(it.hasNext()){
 						Integer key = (Integer) it.next();
 						System.out.println(treeMapVuelos.get(key)); //treeMapVuelos.get(key) ejecuta el metodo toString definido en la clase del objeto.
-					}
+					}*/
 					break;
 				default: 
 					System.out.println("\nERROR: Ha introducido una opcion no valida" + "  ("+ seleccion +")");
