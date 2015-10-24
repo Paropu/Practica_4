@@ -21,7 +21,7 @@ public class Vuelo implements Comparable <Vuelo> {
 		this.duracion = duracion; //Invocar metodo duracionVuelo directamente para mostrar por pantalla ???
 	}
 
-	public String getIdentificador() { //Getters
+	public String getIdentificador() {
 		return identificador;
 	}
 
@@ -42,7 +42,7 @@ public class Vuelo implements Comparable <Vuelo> {
 	}
 	
 	
-	public static String duracionVuelo(String hora1, String hora2) { //Metodo que calcula la duracion del vuelo.
+	public static String duracionVuelo(String hora1, String hora2) {
 
 		// Separo en dos strings
 		String TimeSalida[] = hora1.split(":");
