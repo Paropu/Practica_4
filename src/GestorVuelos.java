@@ -165,13 +165,19 @@ public class GestorVuelos {
 				String companhiaBuscada = teclado.next();
 				teclado.nextLine(); // Se limpia el buffer.
 
-				if (treeMapVuelosBuscarCompanhia.containsKey(companhiaBuscada)) {
-					System.out.println("\n     |Identificador|\t| Companhia |\t\t| Precio |\t| Salida |\t| Llegada |\t| Duracion |");
-					System.out.println("\n" + treeMapVuelosBuscarCompanhia.get(companhiaBuscada) + "\n\n");// treeMapVuelos.get(key2).metodo del objeto !!!;
-					// System.out.println("Hay ese objeto");
-				}
-				// if(treeMapVuelos..containsValue(companhiaBuscada)) System.out.println("----");
-				// else System.out.println("+++++");
+				Iterator it2 = treeMapVuelosHoraSalida.keySet().iterator();
+				while (it2.hasNext()) {
+					Integer key = (Integer) it2.next();
+					String companhia = treeMapVuelosHoraSalida.get(key).getCompanhia(); // String con el nombre de la companhia
+					if (companhia.startsWith(companhiaBuscada)) {
+						System.out.println("\n     |Identificador|\t| Companhia |\t\t| Precio |\t| Salida |\t| Llegada |\t| Duracion |");
+						System.out.println(treeMapVuelosHoraSalida.get(key));
+					} else {
+						System.out.println("No existen vuelos de esa companhia\n\n");
+					}
+					// System.out.println(treeMapVuelosHoraSalida.get(key)); // treeMapVuelos.get(key). ejecuta el metodo toString definido en la clase del objeto.
+				} // if(treeMapVuelos..containsValue(companhiaBuscada)) System.out.println("----");
+					// else System.out.println("+++++");
 				break;
 
 			case 6: // SALIR DEL PROGRAMA
@@ -183,7 +189,7 @@ public class GestorVuelos {
 				 */
 				break;
 			default:
-				System.out.println("\nERROR: Ha introducido una opcion no valida" + "  (" + seleccion + ")");
+				System.out.println("\nERROR: Ha introducido una opcion no valida  (" + seleccion + ")");
 				break;
 			}
 		} while (seleccion != 6);
@@ -204,8 +210,7 @@ public class GestorVuelos {
 				Integer key = (Integer) it.next();
 				pw.println(treeMapVuelos.get(key).getIdentificador() + "*" + treeMapVuelos.get(key).getCompanhia() + "*"
 						+ treeMapVuelos.get(key).getCoste() + "*" + treeMapVuelos.get(key).getHoraSalida() + "*"
-						+ treeMapVuelos.get(key).getHoraLlegada()); // treeMapVuelos.get(key) ejecuta el metodo toString definido en la
-																	// clase del objeto.
+						+ treeMapVuelos.get(key).getHoraLlegada()); // treeMapVuelos.get(key) ejecuta el metodo toString definido en la clase del objeto.
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
